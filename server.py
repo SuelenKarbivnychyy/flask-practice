@@ -13,14 +13,104 @@ app = Flask(__name__)
 def start_here():
     """Home page."""
 
-    return "<!doctype html><html>Hi! This is the home page. <a href='http://localhost:5000/hello'>go to hello page</a></html>"
+    return "<!doctype html><html><a href='http://localhost:5000/questionary'>Take me to start</a></html>"
+
+@app.route('/questionary')
+def choose_path():
+    """Choose if user wants to receive a compliment or insult"""
+
+    return f"""
+    <!doctype html>
+    <html>
+      <head>
+        <title>questionary</title>
+      </head>
+      <body>
+        
+        <form action="/chosen-action">
+          
+          <label for="action">Do you want a compliment or an insult?</label>
+          <select name="action-select" id="action">
+            <option value="compliment">Compliment</opition>
+            <option value="insult">Insult</opition>                      
+
+          <input type="submit" value="Submit">      
+        </form>
+      </body>
+    </html>
+    """
+
+
+@app.route("/chosen-action")
+def ask_level_of_action():  
+
+    choosen = request.args.get("action-select")  
+        
+    return f"""
+    <!doctype html>
+    <html>
+      <head>
+        <title>Choose the level</title>
+      </head>
+      <body>
+      you select {choosen}
+        <form action="/choose-compliment">
+          <label for="compliment-level">Choose your compliment level:</label>
+          <select name="lang-select" id=compliment-level>
+            <option value="nice">Nice</option>            
+            <option value="regular">Regular compliment</option>
+          </select>
+          <input type="submit" value="Submit">
+        </form>
+              
+      </body>
+    </html>
+    """
+
+@app.route("/choose-compliment")
+def choose_compliment():
+    
+        
+    return f"""
+    <!doctype html>
+    <html>
+      <head>
+        <title>A Compliment</title>
+      </head>
+      <body>
+        <form action="/display-compliment>
+        <label for="compliment">Choose a compliment to yourself:</label>
+          <select name="compliment-selected" id="compliment">
+            <option value="awesome">Awesome</option>
+            <option value="terrific">Terrific</option>
+            <option value="fantastic">Fantastic</option>
+            <option value="neato">Neato</option>
+            <option value="fantabulous">Fantabulous</option>
+            <option value="wowza">Wowza</option>
+            <option value="oh-so-not-meh">Oh-so-not-meh</option>
+            <option value="brilliant">Brilliant</option>
+            <option value="ducky">Ducky</option>
+            <option value="coolio">Coolio</option>
+            <option value="incredible">Incredible</option>
+            <option value="wonderful">Wonderful</option>
+            <option value="smashing">Smashing</option>
+            <option value="lovely">Lovely</option>
+          </select>          
+          <input type="submit" value="Submit">
+              
+      </body>
+    </html>
+    """
+    
+
+
 
 
 @app.route('/hello')
 def say_hello():
     """Say hello and prompt for user's name."""
 
-    return """
+    result = """
     <!doctype html>
     <html>
       <head>
@@ -30,6 +120,7 @@ def say_hello():
         <h1>Hi There!</h1>
         <form action="/greet">
           What's your name? <input type="text" name="person">
+          Whai is your favorite color? <input type="text" name="color">
           <label for="compliment">Choose a compliment to yourself:</label>
           <select name="compliment-selected" id="compliment">
             <option value="awesome">Awesome</option>
@@ -57,6 +148,7 @@ def say_hello():
       </body>
     </html>
     """
+    return result
 
 
 @app.route('/greet')
@@ -64,6 +156,7 @@ def greet_person():
     """Get user by name."""
 
     player = request.args.get("person")
+    color =request.args.get("color")
 
     compliment = request.args.get("compliment-selected")    
 
@@ -74,7 +167,7 @@ def greet_person():
         <title>A Compliment</title>
       </head>
       <body>
-        Hi, {player}! I think you're {compliment}!
+        Hi, {player}! I also like {color} and I think you're {compliment}!
       </body>
     </html>
     """
